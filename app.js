@@ -11,12 +11,7 @@ var users = require('./routes/users');
 var app = express();
 
 var wechat = require('wechat');
-var config = {
-  token: 'bf2065d5b55301df603fb3386bc1e7a1',
-  appid: 'wx402af42727f4fca1',
-  // encodingAESKey: 'encodinAESKey',
-  checkSignature: false // 可选，默认为true。由于微信公众平台接口调试工具在明文模式下不发送签名，所以如要使用该测试工具，请将其设置为false
-};
+var config = require('./Config/Setting');
 var axios = require('axios');
 
 // view engine setup
@@ -33,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/users', users);
-app.use('/wechat', wechat(config.token, function (req, res, next) {
+app.use('/wechat', wechat(config.moduleConfig.token, function (req, res, next) {
   // 微信输入信息都在req.weixin上
   var message = req.weixin;
   var openId = message.FromUserName;
@@ -46,7 +41,7 @@ app.use('/wechat', wechat(config.token, function (req, res, next) {
     res.reply({
       type: "image",
       content: {
-        mediaId: 'vEUA93tZUeI1w0W45Fe4_bHSJeoZ8hwnoILoGXjZWeLDeGAlQIB38Yj8RnL7Lo4v'
+        mediaId: message.MediaId
       }
     });
   }
